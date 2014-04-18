@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.util.Scanner;
+
+import javax.print.attribute.standard.Destination;
 
 
 public class AOmain {
@@ -6,12 +9,16 @@ public class AOmain {
 	
 	static int n;
 	static boolean solved=false;
+	static int destination;
 	
 
 	public static void main(String args[]) throws IOException
 	{
-		String data = null;
-		ReadFile rf= new ReadFile("D:\\CSE6 Resources\\AI\\AOstar\\Input.txt");
+		String data = null,filepath;
+		Scanner s=new Scanner(System.in);
+		System.out.println("Please Enter the InputFile Path with double slashes \n Example D:\\CSE6 Resources\\AI\\AOstar\\Input.txt");
+		filepath=s.nextLine();
+		ReadFile rf= new ReadFile(filepath);
 		try {
 			data=rf.openfile();
 		} catch (IOException e) {
@@ -21,18 +28,21 @@ public class AOmain {
 		n=rf.no_of_nodes();
 		Vertical_Node[] graph = new Vertical_Node[n];
 		
+		System.out.println("Please Enter the source node");
+		int source=s.nextInt();
+		System.out.println("Please Enter the destination node");
+		destination=s.nextInt();
+		
+		
 		buildgraph(data,graph);
 		printgraph(graph);
 		int length=0;
 		while(!solved)
-			graph[0].hvalue=AOStar(graph,0);
+			graph[0].hvalue=AOStar(graph,source);
 		
-		System.out.println(graph[0].hvalue);
+		System.out.println("Cost of traversing from "+source+" to "+destination+" is "+ graph[0].hvalue);
 		printgraph(graph);
-		for(int i=0;i<n;i++)
-		{
-			System.out.println( i +" = "+graph[i].status);
-		}
+		
 		
 	}
 
@@ -47,11 +57,11 @@ public class AOmain {
 		if(graph[i].status==0)
 		{
 			graph[i].status=1;
-			if(graph[i].node==7)
+			if(graph[i].node==destination)
 			{
 				solved=true;
 			}
-			System.out.println("node = "+graph[i].node+" min = "+min);
+			//System.out.println("node = "+graph[i].node+" min = "+min);
 			return graph[i].hvalue;
 		}
 		else if(graph[i].status==2)
@@ -114,7 +124,7 @@ public class AOmain {
 		}
 		else
 		{
-			System.out.println("Status of "+i+" = 2");
+			//System.out.println("Status of "+i+" = 2");
 			graph[i].status=2;
 			temp = graph[i].hnext;
 		}
@@ -130,7 +140,7 @@ public class AOmain {
 			
 			if(tempmin<min)
 			{
-				System.out.println("While Tempnode = "+temp.node+" temp--and= "+temp.and);
+				//System.out.println("While Tempnode = "+temp.node+" temp--and= "+temp.and);
 					
 				if(!temp.and)
 				{
@@ -183,7 +193,7 @@ public class AOmain {
 			return min;
 		}
 		
-		System.out.println("graph[minnode] = "+graph[minnode].hvalue+" minnode = "+minnode+" minnode2 = "+minnode2+" graph[minnode2] = "+graph[minnode2].hvalue+" min = "+min+" pathmin= "+pathmin+" tempand = "+tempand);
+		//System.out.println("graph[minnode] = "+graph[minnode].hvalue+" minnode = "+minnode+" minnode2 = "+minnode2+" graph[minnode2] = "+graph[minnode2].hvalue+" min = "+min+" pathmin= "+pathmin+" tempand = "+tempand);
 		
 		if(!tempand)
 		{	
@@ -195,7 +205,7 @@ public class AOmain {
 		{
 			min=AOStar(graph,minnode);
 					min2=AOStar(graph,minnode2);
-					System.out.println("min2 = "+min2);
+				//	System.out.println("min2 = "+min2);
 			
 				graph[i].hvalue=pathmin+min+min2;
 				smallNode.hvalue=min;
@@ -203,7 +213,7 @@ public class AOmain {
 			
 		}
 		
-		System.out.println("i = "+i+"graph[i] = "+graph[i].status);
+		//System.out.println("i = "+i+"graph[i] = "+graph[i].status);
 		return graph[i].hvalue;
 	}
 
